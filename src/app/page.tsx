@@ -3,6 +3,7 @@ import { MouseEventHandler, useEffect } from 'react';
 import ListaUsuarios from "@/../components/listaUsuarios";
 import { store } from '@/store';
 import { Provider } from 'react-redux';
+
 const options = {
   enableHighAccuracy: true,
   timeout: 5000,
@@ -25,12 +26,29 @@ export default function Home() {
   const localizar: MouseEventHandler<HTMLButtonElement> = () => {
     navigator.geolocation.getCurrentPosition(success, error, options);
   }
-
+  const getClima: MouseEventHandler<HTMLButtonElement> = async () => {
+    try {
+      const response = await fetch('/api/clima');
+      console.log('response: ', response);
+      if (response.ok) {
+        const data = response.json();
+        console.log('data: ', data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    // const url: string = `https://api.tomorrow.io/v4/weather/forecast?location=20.6620982,-103.3959561&apikey=yKEpz5YiRXmQlu91jFbsy54adalYVAEn`
+    // fetch(url, optionsAPI)
+    // .then(response => response.json())
+    // .then(response => console.log(response))
+    // .catch(err => console.error(err));
+  }
 
   return (
     <div>
       {/* Asigna un ID al botón */}
       <button id="miBoton" onClick={localizar}>Localizar</button>
+      <button onClick={getClima}>get clima</button>
       <Provider store={store} >
         <ListaUsuarios></ListaUsuarios>
       </Provider>
